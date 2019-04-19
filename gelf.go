@@ -51,11 +51,6 @@ func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 		if m.Source == "stderr" {
 			level = gelf.LOG_ERR
 		}
-		extra, err := m.getExtraFields()
-		if err != nil {
-			log.Println("Graylog:", err)
-			continue
-		}
 
 		msg := gelf.Message{
 			Version:  "1.1",
@@ -63,7 +58,6 @@ func (a *GelfAdapter) Stream(logstream chan *router.Message) {
 			Short:    m.Message.Data,
 			TimeUnix: float64(m.Message.Time.UnixNano()/int64(time.Millisecond)) / 1000.0,
 			Level:    level,
-			RawExtra: extra,
 		}
 		// 	ContainerId:    m.Container.ID,
 		// 	ContainerImage: m.Container.Config.Image,
